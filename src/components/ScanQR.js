@@ -20,7 +20,7 @@ const ScanQR = () => {
           <p className="text-center m-4 fw-bold">Scanning QR Code...</p>
           <div className="mb-5 mt-5">
             <Link to={"/welcome"}>
-              <button className="btn btn-dark w-100 fw-bold">
+              <button className="btn btn-dark w-100 fw-bold py-2">
                 Cancel
               </button>
             </Link>

@@ -20,7 +20,7 @@ const WelcomePage = () => {
           </h5>
           <div className="mb-5 mt-5">
             <Link to={"/scan"}>
-              <button className="btn btn-success w-100 fw-bold">
+              <button className="btn btn-success w-100 fw-bold py-2">
                 Scan QR Code
               </button>
             </Link>

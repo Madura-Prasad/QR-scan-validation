@@ -15,7 +15,7 @@ const QrError = () => {
         {/* <p className="text-center m-4 fw-bold">Invalid QR Code </p> */}
         <div className="mb-5 mt-5">
           <Link to={"/scan"}>
-            <button className="btn btn-warning w-100 fw-bold">
+            <button className="btn btn-warning w-100 fw-bold py-2">
               Scan Another QR Code
             </button>
           </Link>

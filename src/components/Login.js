@@ -118,14 +118,14 @@ const Login = () => {
                 className="form-label fw-bold text-secondary"
                 style={{ marginLeft: "7.5px" }}
               >
-                Remember Me{" "}
+                Remember Me
               </label>
             </div>
 
             <div className="mb-5 mt-5">
               <button
                 type="submit"
-                className="btn btn-success w-100 fw-bold"
+                className="btn btn-success w-100 fw-bold py-2"
               >
                 Sign In
               </button>

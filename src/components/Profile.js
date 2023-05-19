@@ -58,7 +58,7 @@ const Profile = () => {
           </div>
 
           <div className="mb-5 mt-3 text-center">
-            <button className="btn btn-success">Meal Delivered</button>
+            <button className="btn btn-success py-2">Meal Delivered</button>
           </div>
 
           <div className="mb-4 text-center">

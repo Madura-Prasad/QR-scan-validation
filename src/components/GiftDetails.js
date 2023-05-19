@@ -51,7 +51,7 @@ const GiftDetails = () => {
           </div>
 
           <div className="mb-5 text-center text-success ">
-            <button className="btn btn-success">Gift Collect</button>
+            <button className="btn btn-success py-2">Gift Collect</button>
           </div>
 
           <div className="mb-3 text-center text-danger fw-bold">

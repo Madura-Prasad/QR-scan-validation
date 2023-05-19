@@ -14,7 +14,7 @@ const QrSuccess = () => {
         {/* <p className="text-center m-4 fw-bold text-success">Valid QR Code </p> */}
         <div className="mb-5 mt-5">
           <Link to={"/profile"}>
-            <button className="btn btn-success w-100 fw-bold">
+            <button className="btn btn-success w-100 fw-bold py-2">
               Go
             </button>
           </Link>
