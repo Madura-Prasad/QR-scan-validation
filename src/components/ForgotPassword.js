@@ -80,7 +80,7 @@ const ForgotPassword = () => {
             </div>
 
             <div className="mb-5 mt-5">
-              <button className="btn btn-warning w-100 fw-bold py-2">
+              <button style={{backgroundColor:'#ffc107',border:'none'}} className="w-100 fw-bold py-2">
                 Reset Password
               </button>
             </div>
