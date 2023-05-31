@@ -6,7 +6,7 @@ import Success from "../assets/success.gif";
 
 const QrSuccess = () => {
   const { shortenedUrl } = useParams();
-  const [validationResult, setValidationResult] = useState(null);
+  const [, setValidationResult] = useState(null);
   const [certificateData, setCertificateData] = useState(null);
   const [doctorName, setDoctorName] = useState("");
   const [category, setCategory] = useState("");

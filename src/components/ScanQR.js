@@ -3,14 +3,14 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import QrReader from "react-qr-scanner";
-import {  useParams } from "react-router-dom";
+
 
 
 const ScanQR = () => {
   const navigate = useNavigate();
   const [delay] = useState(100);
   const [result, setResult] = useState("No result");
-  const [storedUrl, setStoredUrl] = useState("");
+  const [, setStoredUrl] = useState("");
   const [validationResult, setValidationResult] = useState(null);
 
   const handleScan = (data) => {
