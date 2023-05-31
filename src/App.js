@@ -7,6 +7,7 @@ import Profile from "./components/Profile"
 import GiftDetails from "./components/GiftDetails"
 import ScanSuccess from "./components/QrSuccess"
 import ScanError from "./components/QrError"
+import DiningProfile from './components/DiningProfile'
 
 function App() {
   return (
@@ -18,8 +19,9 @@ function App() {
         <Route exact path="/scan" element={<ScanQR/>}/>
         <Route exact path="/profile" element={<Profile/>}/>
         <Route exact path="/gift" element={<GiftDetails/>}/>
-        <Route exact path="/scan-success" element={<ScanSuccess/>}/>
-        <Route exact path="/scan-error" element={<ScanError/>}/>
+        <Route exact path="/dine" element={<DiningProfile/>}/>
+        <Route exact path="/scan-success/:shortenedUrl" element={<ScanSuccess/>}/>
+        <Route exact path="/scan-error/:shortenedUrl" element={<ScanError/>}/>
       </Routes>
     </BrowserRouter>
   );

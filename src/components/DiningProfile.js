@@ -9,7 +9,9 @@ const Profile = () => {
     <div className="container d-flex align-items-center justify-content-center vh-100">
       <div className="row">
         <div className="col-md-12 col-lg-12 col-xs-12 col-sm-12 border rounded p-4 shadow">
-          <h4 className="text-center mt-4 fw-bold text-secondary text-decoration-underline">Profile</h4>
+          <h4 className="text-center mt-4 fw-bold text-secondary text-decoration-underline">
+            Profile
+          </h4>
           <div className="mt-5">
             <img
               className="w-25 rounded mx-auto d-block"
@@ -49,6 +51,14 @@ const Profile = () => {
                 </tbody>
               </table>
             </div>
+          </div>
+
+          <div className="mb-5 mt-3 text-center">
+            <button className="btn btn-success py-2">Meal Delivered</button>
+          </div>
+
+          <div className="mb-4 text-center">
+            <h3 className="form-label fw-bold">Meal Status</h3>
           </div>
 
           <div className="mb-5">
