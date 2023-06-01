@@ -4,6 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Link } from "react-router-dom";
 import Logo from "../assets/logo.png";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Login = () => {
   let navigate = useNavigate();
@@ -25,7 +26,20 @@ const Login = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     if (validateFields()) {
-      navigate("/welcome");
+      try {
+        const response = await axios.post("http://localhost:8070/login", user);
+        const responseData = response.data.data;
+        const roleType = responseData.role_type;
+        const roleName = responseData.email;
+        console.log(response.data);
+        navigate(`/welcome/${roleType}/${roleName}`);
+      } catch (error) {
+        console.log(error.response.data);
+        setError({
+          ...error,
+          errorLogging: "Invalid Login Credentials",
+        });
+      }
     }
   };
 
@@ -74,7 +88,12 @@ const Login = () => {
             136th Anniversary International Medical Congress
           </h4>
 
-          <h5 className="text-center m-4 fw-bold">Sign In</h5>
+          <h5 className=" text-center m-4 fw-bold">Sign In</h5>
+
+          {error.errorLogging && (
+  <p className="bg-danger text-light text-center fw-semibold rounded p-1">{error.errorLogging}</p>
+)}
+
           <form onSubmit={(e) => onSubmit(e)} method="post">
             <div className="mb-4 mt-5 text-start">
               <label className="form-label fw-bold">Email Address </label>
@@ -108,7 +127,7 @@ const Login = () => {
               )}
             </div>
 
-            <div className="mb-4 text-start">
+            {/* <div className="mb-4 text-start">
               <input
                 type={"checkbox"}
                 className="fw-bold"
@@ -120,7 +139,7 @@ const Login = () => {
               >
                 Remember Me
               </label>
-            </div>
+            </div> */}
 
             <div className="mb-5 mt-5">
               <button

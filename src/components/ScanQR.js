@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link, useParams } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import QrReader from "react-qr-scanner";
-
-
 
 const ScanQR = () => {
   const navigate = useNavigate();
@@ -12,35 +10,30 @@ const ScanQR = () => {
   const [result, setResult] = useState("No result");
   const [, setStoredUrl] = useState("");
   const [validationResult, setValidationResult] = useState(null);
+  const { roleName, roleType } = useParams();
 
   const handleScan = (data) => {
     if (data) {
       setResult(data);
-    }
-  };
-
-  const handleError = (err) => {
-    console.error(err);
-  };
-
-  const handleResultClick = () => {
-    if (result) {
-      console.log("Result clicked:", result);
-      localStorage.setItem("shortenedUrl", result.text);
-      setStoredUrl(result.text);
 
       // Make API request here
-      const shortenedUrl = result.text.split("=")[1];
+      const shortenedUrl = data.text.split("=")[1];
       axios
         .post("https://emg.textware.lk/emgapi/v1/digital/ext/check/qr", {
           qrCode: shortenedUrl,
         })
         .then((response) => {
           setValidationResult(response.data);
-          if (response.data.responseCode ==='00') {
-            navigate(`/scan-success/${shortenedUrl}`); // Redirect to success page
+          if (response.data.responseCode === "00") {
+            if (roleType === "Doorguard") {
+              navigate(`/profile/${shortenedUrl}/${roleName}/${roleType}`);
+            } else if (roleType === "Gift- Giver") {
+              navigate(`/gift/${shortenedUrl}/${roleName}/${roleType}`);
+            } else if (roleType === "Diner") {
+              navigate(`/dine/${shortenedUrl}/${roleName}/${roleType}`);
+            }
           } else {
-            navigate(`/scan-error/${shortenedUrl}`); // Redirect to error page
+            navigate(`/scan-error/qr=?${shortenedUrl}`);
           }
         })
         .catch((error) => {
@@ -48,6 +41,10 @@ const ScanQR = () => {
           setValidationResult(null);
         });
     }
+  };
+
+  const handleError = (err) => {
+    console.error(err);
   };
 
   useEffect(() => {
@@ -85,6 +82,7 @@ const ScanQR = () => {
           <br />
           <input
             className="form-control fw-bold border-0 text-center"
+            type="hidden"
             value={shortenedUrl}
             disabled
           />
@@ -94,14 +92,9 @@ const ScanQR = () => {
               <p>{JSON.stringify(validationResult)}</p>
             </div>
           )}
-          <div className="mb-5 mt-4">
-            <button
-              className="btn btn-dark w-100 fw-bold py-2"
-              onClick={handleResultClick}
-            >
-              Validate
-            </button>
-          </div>
+          <Link to={`/welcome/${roleName}/${roleType}`}>
+            <button className="btn btn-dark w-100 fw-bold py-2">Cancel</button>
+          </Link>
         </div>
       </div>
     </div>

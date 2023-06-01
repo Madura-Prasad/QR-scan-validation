@@ -15,13 +15,13 @@ function App() {
       <Routes>
         <Route exact path="/" element={<Login />} />
         <Route exact path="/forgot-password" element={<ForgotPassword/>}/>
-        <Route exact path="/welcome" element={<WelcomePage/>}/>
-        <Route exact path="/scan" element={<ScanQR/>}/>
-        <Route exact path="/profile" element={<Profile/>}/>
-        <Route exact path="/gift" element={<GiftDetails/>}/>
-        <Route exact path="/dine" element={<DiningProfile/>}/>
+        <Route exact path="/welcome/:roleType/:roleName" element={<WelcomePage/>}/>
+        <Route exact path="/scan/:roleName/:roleType" element={<ScanQR/>}/>
+        <Route exact path="/profile/:shortenedUrl/:roleName/:roleType" element={<Profile/>}/>
+        <Route exact path="/gift/:shortenedUrl/:roleName/:roleType" element={<GiftDetails/>}/>
+        <Route exact path="/dine/:shortenedUrl/:roleName/:roleType" element={<DiningProfile/>}/>
         <Route exact path="/scan-success/:shortenedUrl" element={<ScanSuccess/>}/>
-        <Route exact path="/scan-error/:shortenedUrl" element={<ScanError/>}/>
+        <Route exact path="/scan-error" element={<ScanError/>}/>
       </Routes>
     </BrowserRouter>
   );

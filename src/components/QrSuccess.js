@@ -43,7 +43,7 @@ const QrSuccess = () => {
           </h4>
           <div>
             <img
-              className="w-50 rounded mx-auto d-block mt-5 mb-5"
+              className="w-50 rounded mx-auto d-block mt-2 mb-2"
               src={Success}
               alt="Success"
             />
@@ -95,7 +95,7 @@ const QrSuccess = () => {
             </div>
           )}
           <div className="mb-5 mt-5">
-            <Link to={"/profile"}>
+            <Link to={`/profile/${shortenedUrl}`}>
               <button className="btn btn-success w-100 fw-bold py-2">Go</button>
             </Link>
           </div>
