@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Success from "../assets/success.gif";
+import { useNavigate } from "react-router-dom";
 
 const QrSuccess = () => {
-  const { shortenedUrl } = useParams();
+  let navigate = useNavigate();
+  const { shortenedUrl, roleName, roleType } = useParams();
   const [, setValidationResult] = useState(null);
   const [certificateData, setCertificateData] = useState(null);
   const [doctorName, setDoctorName] = useState("");
@@ -33,6 +35,17 @@ const QrSuccess = () => {
         setCertificateData(null);
       });
   }, [shortenedUrl]);
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    if (roleType === "Doorguard") {
+      navigate(`/profile/${shortenedUrl}/${roleName}/${roleType}`);
+    } else if (roleType === "GiftGiver") {
+      navigate(`/gift/${shortenedUrl}/${roleName}/${roleType}`);
+    } else if (roleType === "Diner") {
+      navigate(`/dine/${shortenedUrl}/${roleName}/${roleType}`);
+    }
+  };
 
   return (
     <div className="container d-flex align-items-center justify-content-center vh-100">
@@ -94,11 +107,11 @@ const QrSuccess = () => {
               </div>
             </div>
           )}
-          <div className="mb-5 mt-5">
-            <Link to={`/profile/${shortenedUrl}`}>
+          <form onSubmit={(e) => onSubmit(e)} method="post">
+            <div className="mb-5 mt-5">
               <button className="btn btn-success w-100 fw-bold py-2">Go</button>
-            </Link>
-          </div>
+            </div>
+          </form>
         </div>
       </div>
     </div>

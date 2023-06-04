@@ -20,7 +20,7 @@ function App() {
         <Route exact path="/profile/:shortenedUrl/:roleName/:roleType" element={<Profile/>}/>
         <Route exact path="/gift/:shortenedUrl/:roleName/:roleType" element={<GiftDetails/>}/>
         <Route exact path="/dine/:shortenedUrl/:roleName/:roleType" element={<DiningProfile/>}/>
-        <Route exact path="/scan-success/:shortenedUrl" element={<ScanSuccess/>}/>
+        <Route exact path="/scan-success/:shortenedUrl/:roleName/:roleType" element={<ScanSuccess/>}/>
         <Route exact path="/scan-error" element={<ScanError/>}/>
       </Routes>
     </BrowserRouter>

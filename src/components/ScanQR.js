@@ -16,30 +16,28 @@ const ScanQR = () => {
     if (data) {
       setResult(data);
 
-      // Make API request here
+      // Check if the scanned QR code matches the expected format
       const shortenedUrl = data.text.split("=")[1];
-      axios
-        .post("https://emg.textware.lk/emgapi/v1/digital/ext/check/qr", {
-          qrCode: shortenedUrl,
-        })
-        .then((response) => {
-          setValidationResult(response.data);
-          if (response.data.responseCode === "00") {
-            if (roleType === "Doorguard") {
-              navigate(`/profile/${shortenedUrl}/${roleName}/${roleType}`);
-            } else if (roleType === "Gift- Giver") {
-              navigate(`/gift/${shortenedUrl}/${roleName}/${roleType}`);
-            } else if (roleType === "Diner") {
-              navigate(`/dine/${shortenedUrl}/${roleName}/${roleType}`);
+      if (shortenedUrl) {
+        axios
+          .post("https://emg.textware.lk/emgapi/v1/digital/ext/check/qr", {
+            qrCode: shortenedUrl,
+          })
+          .then((response) => {
+            setValidationResult(response.data);
+            if (response.data.responseCode === "00") {
+              navigate(`/scan-success/${shortenedUrl}/${roleName}/${roleType}`);
+            } else {
+              navigate("/scan-error");
             }
-          } else {
-            navigate(`/scan-error/qr=?${shortenedUrl}`);
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          setValidationResult(null);
-        });
+          })
+          .catch((error) => {
+            console.error(error);
+            setValidationResult(null);
+          });
+      }else {
+        navigate("/scan-error"); // Redirect to error page if QR code format is incorrect
+      }
     }
   };
 
