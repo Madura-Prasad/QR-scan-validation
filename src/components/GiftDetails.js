@@ -12,6 +12,25 @@ const GiftDetails = () => {
   const [doctorName, setDoctorName] = useState("");
   const [category, setCategory] = useState("");
   const [giftDelivered, setGiftDelivered] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    // Fetch the data from the API endpoint
+    axios
+      .get(`${process.env.REACT_APP_API_BASE_URL}/gift/getRefCode`)
+      .then((response) => {
+        const columnData = response.data.map((item) => item.ref_code); // Replace "ref_code" with the actual column name
+        console.log("Column Data:", columnData);
+        if (columnData.includes(shortenedUrl)) {
+          console.log("ref_code already exists in the database");
+          setError("Gift already Issued!");
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        // Handle error
+      });
+  }, []);
 
   useEffect(() => {
     // Make API request here
@@ -30,7 +49,7 @@ const GiftDetails = () => {
         setCategory(parsedData.category);
 
         // Check if the gift has already been delivered
-        if (response.data.giftDelivered) {
+        if (response.data.giftDelivered || error !== "") {
           setGiftDelivered(true);
         }
       })
@@ -52,16 +71,37 @@ const GiftDetails = () => {
       ref_code: shortenedUrl, // Replace with the actual reference code
     };
 
-    // Example API request to save data in the datatable
+    // Fetch the ref_codes from the API endpoint
     axios
-      .post(`${process.env.REACT_APP_API_BASE_URL}/gift/save_gift`, data)
+      .get(`${process.env.REACT_APP_API_BASE_URL}/gift/getRefCode`)
       .then((response) => {
-        console.log("Data saved successfully...");
-        setGiftDelivered(true);
-        // Perform any necessary actions after saving the data
+        const columnData = response.data.map((item) => item.ref_code);
+        console.log("Column Data:", columnData);
+
+        // Check if ref_code already exists in the columnData
+        if (columnData.includes(shortenedUrl)) {
+          console.log("ref_code already exists in the database");
+          setError("Gift already Issued!");
+          // Disable "Gift Collect" button and show error message
+          setGiftDelivered(true);
+          // Perform any additional error handling or display logic
+        } else {
+          // Example API request to save data in the datatable
+          axios
+            .post(`${process.env.REACT_APP_API_BASE_URL}/gift/save_gift`, data)
+            .then((response) => {
+              console.log("Data saved successfully...");
+              setGiftDelivered(true);
+              // Perform any necessary actions after saving the data
+            })
+            .catch((error) => {
+              console.error("Error saving data:", error);
+              // Handle error
+            });
+        }
       })
       .catch((error) => {
-        console.error("Error saving data:", error);
+        console.error("Error fetching ref_codes:", error);
         // Handle error
       });
   };
@@ -128,17 +168,18 @@ const GiftDetails = () => {
             </div>
           )}
 
-          {!giftDelivered && (
-            <div className="mb-5 text-center text-success ">
-              <button onClick={handleGift} className="btn btn-success py-2">
-                Gift Collect
-              </button>
+          {error && (
+            <div className="mb-3 text-center text-danger fw-bold">
+              <h3>{error}</h3>
+              {/* Add additional error message or display logic */}
             </div>
           )}
 
-          {giftDelivered && (
-            <div className="mb-3 text-center text-danger fw-bold">
-              <h3>Gift Already Delivered ...</h3>
+          {!giftDelivered && !error && (
+            <div className="mb-5 text-center text-success ">
+              <button onClick={handleGift} className="btn btn-success py-2">
+                Gift Issue
+              </button>
             </div>
           )}
 

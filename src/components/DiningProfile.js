@@ -12,6 +12,26 @@ const Profile = () => {
   const [doctorName, setDoctorName] = useState("");
   const [category, setCategory] = useState("");
   const [giftDelivered, setGiftDelivered] = useState(false);
+  const [error, setError] = useState("");
+
+
+useEffect(() => {
+    // Fetch the data from the API endpoint
+    axios
+      .get(`${process.env.REACT_APP_API_BASE_URL}/dine/getRefCode`)
+      .then((response) => {
+        const columnData = response.data.map((item) => item.ref_code); // Replace "ref_code" with the actual column name
+        //console.log("Column Data:", columnData);
+        if (columnData.includes(shortenedUrl)) {
+         // console.log("ref_code already exists in the database");
+          setError("Dine Already Issued!");
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        // Handle error
+      });
+  }, []);
 
   useEffect(() => {
     // Make API request here
@@ -28,6 +48,11 @@ const Profile = () => {
         const parsedData = JSON.parse(certificateDataJson);
         setDoctorName(parsedData.doctorname);
         setCategory(parsedData.category);
+
+          // Check if the gift has already been delivered
+        if (response.data.giftDelivered || error !== "") {
+          setGiftDelivered(true);
+        }
       })
       .catch((error) => {
         console.error(error);
@@ -47,18 +72,41 @@ const Profile = () => {
     };
 
     // Example API request to save data in the datatable
-    axios
-      .post(`${process.env.REACT_APP_API_BASE_URL}/dine/save_dine`, data)
+     axios
+      .get(`${process.env.REACT_APP_API_BASE_URL}/dine/getRefCode`)
       .then((response) => {
-        console.log("Data saved successfully...");
-        setGiftDelivered(true);
-        // Perform any necessary actions after saving the data
+        const columnData = response.data.map((item) => item.ref_code);
+        console.log("Column Data:", columnData);
+
+        // Check if ref_code already exists in the columnData
+        if (columnData.includes(shortenedUrl)) {
+          //console.log("ref_code already exists in the database");
+          setError("Dine Already Issued!");
+          // Disable "Gift Collect" button and show error message
+          setGiftDelivered(true);
+          // Perform any additional error handling or display logic
+        } else {
+          // Example API request to save data in the datatable
+          axios
+            .post(`${process.env.REACT_APP_API_BASE_URL}/dine/save_dine`, data)
+            .then((response) => {
+              //console.log("Data saved successfully...");
+              setGiftDelivered(true);
+              // Perform any necessary actions after saving the data
+            })
+            .catch((error) => {
+              console.error("Error saving data:", error);
+              // Handle error
+            });
+        }
       })
       .catch((error) => {
-        console.error("Error saving data:", error);
+        console.error("Error fetching ref_codes:", error);
         // Handle error
       });
   };
+
+
   return (
     <div className="container d-flex align-items-center justify-content-center vh-100">
       <div className="row">
@@ -121,17 +169,18 @@ const Profile = () => {
             </div>
           )}
 
-          {!giftDelivered && (
-            <div className="mb-5 text-center text-success ">
-              <button onClick={handleGift} className="btn btn-success py-2">
-                Dine Issue
-              </button>
+        {error && (
+            <div className="mb-3 text-center text-danger fw-bold">
+              <h3>{error}</h3>
+              {/* Add additional error message or display logic */}
             </div>
           )}
 
-          {giftDelivered && (
-            <div className="mb-3 text-center text-danger fw-bold">
-              <h3>Dine Already Issued ...</h3>
+          {!giftDelivered && !error && (
+            <div className="mb-5 text-center text-success ">
+              <button onClick={handleGift} className="btn btn-success py-2">
+                Issued Dining
+              </button>
             </div>
           )}
 
