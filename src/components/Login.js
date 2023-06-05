@@ -27,7 +27,7 @@ const Login = () => {
     e.preventDefault();
     if (validateFields()) {
       try {
-        const response = await axios.post("http://localhost:8070/login", user);
+        const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/login`, user);
         const responseData = response.data.data;
         const roleType = responseData.role_type;
         const roleName = responseData.email;
@@ -125,20 +125,6 @@ const Login = () => {
                 <p className="text-danger fw-semibold ">{error.password}</p>
               )}
             </div>
-
-            {/* <div className="mb-4 text-start">
-              <input
-                type={"checkbox"}
-                className="fw-bold"
-                id="exampleFormControlInput1"
-              />
-              <label
-                className="form-label fw-bold text-secondary"
-                style={{ marginLeft: "7.5px" }}
-              >
-                Remember Me
-              </label>
-            </div> */}
 
             <div className="mb-5 mt-5">
               <button
