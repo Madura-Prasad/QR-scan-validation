@@ -21,7 +21,7 @@ function App() {
         <Route exact path="/gift/:shortenedUrl/:roleName/:roleType" element={<GiftDetails/>}/>
         <Route exact path="/dine/:shortenedUrl/:roleName/:roleType" element={<DiningProfile/>}/>
         <Route exact path="/scan-success/:shortenedUrl/:roleName/:roleType" element={<ScanSuccess/>}/>
-        <Route exact path="/scan-error" element={<ScanError/>}/>
+        <Route exact path="/scan-error/:roleName/:roleType" element={<ScanError/>}/>
       </Routes>
     </BrowserRouter>
   );

@@ -12,7 +12,6 @@ const Profile = () => {
   const [category, setCategory] = useState("");
 
   useEffect(() => {
-    // Make API request here
     axios
       .post("https://emg.textware.lk/emgapi/v1/digital/ext/check/qr", {
         qrCode: shortenedUrl,

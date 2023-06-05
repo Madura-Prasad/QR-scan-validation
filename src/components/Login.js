@@ -31,7 +31,6 @@ const Login = () => {
         const responseData = response.data.data;
         const roleType = responseData.role_type;
         const roleName = responseData.email;
-        console.log(response.data);
         navigate(`/welcome/${roleType}/${roleName}`);
       } catch (error) {
         console.log(error.response.data);

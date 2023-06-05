@@ -28,7 +28,7 @@ const ScanQR = () => {
             if (response.data.responseCode === "00") {
               navigate(`/scan-success/${shortenedUrl}/${roleName}/${roleType}`);
             } else {
-              navigate("/scan-error");
+              navigate(`/scan-error/${roleName}/${roleType}`);
             }
           })
           .catch((error) => {
@@ -36,7 +36,7 @@ const ScanQR = () => {
             setValidationResult(null);
           });
       }else {
-        navigate("/scan-error"); // Redirect to error page if QR code format is incorrect
+        navigate(`/scan-error/${roleName}/${roleType}`); // Redirect to error page if QR code format is incorrect
       }
     }
   };
