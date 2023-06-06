@@ -20,10 +20,10 @@ const GiftDetails = () => {
       .get(`${process.env.REACT_APP_API_BASE_URL}/gift/getRefCode`)
       .then((response) => {
         const columnData = response.data.map((item) => item.ref_code); // Replace "ref_code" with the actual column name
-        console.log("Column Data:", columnData);
+        //console.log("Column Data:", columnData);
         if (columnData.includes(shortenedUrl)) {
-          console.log("ref_code already exists in the database");
-          setError("Gift already Issued!");
+          //console.log("ref_code already exists in the database");
+          setError("Gift Already Issued!");
         }
       })
       .catch((error) => {
@@ -62,7 +62,7 @@ const GiftDetails = () => {
 
   const handleGift = () => {
     // Prepare the data to be sent to the server
-    const dateTime = moment().tz("Asia/Kolkata").format("YYYY-MM-DDTHH:mm:ss");
+    const dateTime = moment().tz("Asia/Kolkata").format("YYYY-MM-DDT HH:mm:ss");
     const data = {
       date_time: dateTime,
       gift_issue: "1",
@@ -76,12 +76,12 @@ const GiftDetails = () => {
       .get(`${process.env.REACT_APP_API_BASE_URL}/gift/getRefCode`)
       .then((response) => {
         const columnData = response.data.map((item) => item.ref_code);
-        console.log("Column Data:", columnData);
+        //console.log("Column Data:", columnData);
 
         // Check if ref_code already exists in the columnData
         if (columnData.includes(shortenedUrl)) {
           console.log("ref_code already exists in the database");
-          setError("Gift already Issued!");
+          setError("Gift Already Issued!");
           // Disable "Gift Collect" button and show error message
           setGiftDelivered(true);
           // Perform any additional error handling or display logic
@@ -90,7 +90,7 @@ const GiftDetails = () => {
           axios
             .post(`${process.env.REACT_APP_API_BASE_URL}/gift/save_gift`, data)
             .then((response) => {
-              console.log("Data saved successfully...");
+              //console.log("Data saved successfully...");
               setGiftDelivered(true);
               // Perform any necessary actions after saving the data
             })

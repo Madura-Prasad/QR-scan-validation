@@ -81,10 +81,10 @@ const Login = () => {
             />
           </div>
           <h4 className="text-center mt-4 fw-bold text-secondary">
-            Sri Lanka Medical Association
+            20th Annual Academic Sessions of the
           </h4>
           <h4 className="text-center fw-bold text-secondary">
-            136th Anniversary International Medical Congress
+            Sri Lanka College of Psychiatrists
           </h4>
 
           <h5 className=" text-center m-4 fw-bold">Sign In</h5>

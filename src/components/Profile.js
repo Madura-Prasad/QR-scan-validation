@@ -54,59 +54,47 @@ const Profile = () => {
       });
   }, [shortenedUrl]);
 
- // Rest of the code...
+  const handleSaveData = () => {
+    // Check if data already exists in the database
+    const dateTime = moment().tz("Asia/Kolkata").format("YYYY-MM-DDT HH:mm:ss");
+    const data = {
+      ref_code: shortenedUrl,
+      date_time: dateTime,
+      roleName: roleName,
+      scan_person_name: roleName,
+    };
 
-// Rest of the code...
+    axios
+      .get(`${process.env.REACT_APP_API_BASE_URL}/entrance/getRefCode`)
+      .then((response) => {
+        const columnData = response.data.map((item) => item.ref_code);
+        if (columnData.includes(shortenedUrl)) {
+          setError("User already Exists!");
+        } else {
+          axios
+            .post(
+              `${process.env.REACT_APP_API_BASE_URL}/entrance/save_entrance`,
+              data
+            )
+            .then((response) => {
+              //console.log("Data added successfully to the database");
+            })
+            .catch((error) => {
+              console.error("Error adding data to the database:", error);
+              // Handle error
+              //setError("User already Exists!");
+            });
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data from the database:", error);
+        // Handle error
+      });
+  };
 
-// Rest of the code...
-
-const handleSaveData = () => {
-  // Check if data already exists in the database
-  axios
-    .get(`${process.env.REACT_APP_API_BASE_URL}/entrance/getRefCode`)
-    .then((response) => {
-      const columnData = response.data.map((item) => item.ref_code);
-      if (columnData.includes(shortenedUrl)) {
-        setError("User already Exists!");
-      } else {
-        const dateTime = moment().tz("Asia/Kolkata").format("YYYY-MM-DDTHH:mm:ss");
-        const data = {
-          ref_code: shortenedUrl,
-          date_time: dateTime,
-          roleName: roleName,
-          scan_person_name: roleName
-        };
-
-        axios
-          .post(`${process.env.REACT_APP_API_BASE_URL}/entrance/save_entrance`, data)
-          .then((response) => {
-            //console.log("Data added successfully to the database");
-          })
-          .catch((error) => {
-            console.error("Error adding data to the database:", error);
-            // Handle error
-            //setError("User already Exists!");
-          });
-      }
-    })
-    .catch((error) => {
-      console.error("Error fetching data from the database:", error);
-      // Handle error
-    });
-};
-
-useEffect(() => {
-  handleSaveData();
-}, []); // Call it only once when the component mounts
-
-// Rest of the code...
-
-
-// Rest of the code...
-
-
-
-
+  useEffect(() => {
+    handleSaveData();
+  }, []); // Call it only once when the component mounts
 
   return (
     <div className="container d-flex align-items-center justify-content-center vh-100">

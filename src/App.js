@@ -11,7 +11,7 @@ import DiningProfile from './components/DiningProfile'
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={"qrvalidate"}>
       <Routes>
         <Route exact path="/" element={<Login />} />
         <Route exact path="/forgot-password" element={<ForgotPassword/>}/>

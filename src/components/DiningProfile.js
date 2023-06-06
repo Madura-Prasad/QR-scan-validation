@@ -14,8 +14,7 @@ const Profile = () => {
   const [giftDelivered, setGiftDelivered] = useState(false);
   const [error, setError] = useState("");
 
-
-useEffect(() => {
+  useEffect(() => {
     // Fetch the data from the API endpoint
     axios
       .get(`${process.env.REACT_APP_API_BASE_URL}/dine/getRefCode`)
@@ -23,7 +22,7 @@ useEffect(() => {
         const columnData = response.data.map((item) => item.ref_code); // Replace "ref_code" with the actual column name
         //console.log("Column Data:", columnData);
         if (columnData.includes(shortenedUrl)) {
-         // console.log("ref_code already exists in the database");
+          // console.log("ref_code already exists in the database");
           setError("Dine Already Issued!");
         }
       })
@@ -49,7 +48,7 @@ useEffect(() => {
         setDoctorName(parsedData.doctorname);
         setCategory(parsedData.category);
 
-          // Check if the gift has already been delivered
+        // Check if the gift has already been delivered
         if (response.data.giftDelivered || error !== "") {
           setGiftDelivered(true);
         }
@@ -61,10 +60,9 @@ useEffect(() => {
       });
   }, [shortenedUrl]);
 
-
   const handleGift = () => {
     // Prepare the data to be sent to the server
-    const dateTime = moment().tz("Asia/Kolkata").format("YYYY-MM-DDTHH:mm:ss");
+    const dateTime = moment().tz("Asia/Kolkata").format("YYYY-MM-DDT HH:mm:ss");
     const data = {
       date_time: dateTime,
       dine_issue: "1",
@@ -72,11 +70,11 @@ useEffect(() => {
     };
 
     // Example API request to save data in the datatable
-     axios
+    axios
       .get(`${process.env.REACT_APP_API_BASE_URL}/dine/getRefCode`)
       .then((response) => {
         const columnData = response.data.map((item) => item.ref_code);
-        console.log("Column Data:", columnData);
+        //console.log("Column Data:", columnData);
 
         // Check if ref_code already exists in the columnData
         if (columnData.includes(shortenedUrl)) {
@@ -105,7 +103,6 @@ useEffect(() => {
         // Handle error
       });
   };
-
 
   return (
     <div className="container d-flex align-items-center justify-content-center vh-100">
@@ -169,7 +166,7 @@ useEffect(() => {
             </div>
           )}
 
-        {error && (
+          {error && (
             <div className="mb-3 text-center text-danger fw-bold">
               <h3>{error}</h3>
               {/* Add additional error message or display logic */}
@@ -190,10 +187,9 @@ useEffect(() => {
           >
             Scan Another QR Code
           </Link>
-          </div>
         </div>
       </div>
-    
+    </div>
   );
 };
 
