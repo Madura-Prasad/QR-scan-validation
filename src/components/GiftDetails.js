@@ -19,21 +19,21 @@ const GiftDetails = () => {
     axios
       .get(`${process.env.REACT_APP_API_BASE_URL}/gift/getRefCode`)
       .then((response) => {
-        const columnData = response.data.map((item) => item.ref_code); // Replace "ref_code" with the actual column name
-        //console.log("Column Data:", columnData);
+        const columnData = response.data.map((item) => item.ref_code);
         if (columnData.includes(shortenedUrl)) {
-          //console.log("ref_code already exists in the database");
-          setError("Gift Already Issued!");
+          const existingUser = response.data.find(
+            (item) => item.ref_code === shortenedUrl
+          );
+          const existingDateTime = existingUser.date_time;
+          setError(`Gift Already Issued! Issued on: ${existingDateTime}`);
         }
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
-        // Handle error
       });
   }, []);
 
   useEffect(() => {
-    // Make API request here
     axios
       .post("https://emg.textware.lk/emgapi/v1/digital/ext/check/qr", {
         qrCode: shortenedUrl,
@@ -48,7 +48,6 @@ const GiftDetails = () => {
         setDoctorName(parsedData.doctorname);
         setCategory(parsedData.category);
 
-        // Check if the gift has already been delivered
         if (response.data.giftDelivered || error !== "") {
           setGiftDelivered(true);
         }
@@ -62,7 +61,7 @@ const GiftDetails = () => {
 
   const handleGift = () => {
     // Prepare the data to be sent to the server
-    const dateTime = moment().tz("Asia/Kolkata").format("YYYY-MM-DDT HH:mm:ss");
+    const dateTime = moment().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
     const data = {
       date_time: dateTime,
       gift_issue: "1",

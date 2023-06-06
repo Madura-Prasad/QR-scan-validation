@@ -23,7 +23,7 @@ const WelcomePage = () => {
           </div>
 
           <h5 className="text-center mt-5 fw-bold">
-            Sri Lanka Medical Association
+          Sri Lanka College of Psychiatrists
           </h5>
           <div className="mb-5 mt-5">
             <Link to={`/scan/${roleName}/${roleType}`}>

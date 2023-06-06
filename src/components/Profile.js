@@ -56,20 +56,25 @@ const Profile = () => {
 
   const handleSaveData = () => {
     // Check if data already exists in the database
-    const dateTime = moment().tz("Asia/Kolkata").format("YYYY-MM-DDT HH:mm:ss");
+    const dateTime = moment().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
     const data = {
       ref_code: shortenedUrl,
       date_time: dateTime,
       roleName: roleName,
       scan_person_name: roleName,
     };
-
+  
     axios
       .get(`${process.env.REACT_APP_API_BASE_URL}/entrance/getRefCode`)
       .then((response) => {
         const columnData = response.data.map((item) => item.ref_code);
         if (columnData.includes(shortenedUrl)) {
-          setError("User already Exists!");
+          const existingUser = response.data.find(
+            (item) => item.ref_code === shortenedUrl
+          );
+          const existingDateTime = existingUser.date_time;
+          setError(`User already exists! Entered on: ${existingDateTime}`);
+          console.log(existingDateTime);
         } else {
           axios
             .post(
@@ -91,6 +96,8 @@ const Profile = () => {
         // Handle error
       });
   };
+  
+  
 
   useEffect(() => {
     handleSaveData();

@@ -10,6 +10,7 @@
     "axios": "^1.4.0",
     "bootstrap": "^5.2.3",
     "mdb-react-ui-kit": "^6.0.0",
+    "modern-react-qr-reader": "^1.0.12",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.43",
     "react": "^18.2.0",

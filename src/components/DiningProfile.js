@@ -15,25 +15,25 @@ const Profile = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    // Fetch the data from the API endpoint
     axios
       .get(`${process.env.REACT_APP_API_BASE_URL}/dine/getRefCode`)
       .then((response) => {
-        const columnData = response.data.map((item) => item.ref_code); // Replace "ref_code" with the actual column name
-        //console.log("Column Data:", columnData);
+        const columnData = response.data.map((item) => item.ref_code);
         if (columnData.includes(shortenedUrl)) {
-          // console.log("ref_code already exists in the database");
-          setError("Dine Already Issued!");
+        
+          const existingUser = response.data.find(
+            (item) => item.ref_code === shortenedUrl
+          );
+          const existingDateTime = existingUser.date_time;
+          setError(`Dine Already Issued! Issued on: ${existingDateTime}`);
         }
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
-        // Handle error
       });
   }, []);
 
   useEffect(() => {
-    // Make API request here
     axios
       .post("https://emg.textware.lk/emgapi/v1/digital/ext/check/qr", {
         qrCode: shortenedUrl,
@@ -62,45 +62,34 @@ const Profile = () => {
 
   const handleGift = () => {
     // Prepare the data to be sent to the server
-    const dateTime = moment().tz("Asia/Kolkata").format("YYYY-MM-DDT HH:mm:ss");
+    const dateTime = moment().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
     const data = {
       date_time: dateTime,
       dine_issue: "1",
       ref_code: shortenedUrl, // Replace with the actual reference code
     };
 
-    // Example API request to save data in the datatable
     axios
       .get(`${process.env.REACT_APP_API_BASE_URL}/dine/getRefCode`)
       .then((response) => {
         const columnData = response.data.map((item) => item.ref_code);
-        //console.log("Column Data:", columnData);
-
-        // Check if ref_code already exists in the columnData
         if (columnData.includes(shortenedUrl)) {
-          //console.log("ref_code already exists in the database");
           setError("Dine Already Issued!");
-          // Disable "Gift Collect" button and show error message
           setGiftDelivered(true);
-          // Perform any additional error handling or display logic
+          
         } else {
-          // Example API request to save data in the datatable
           axios
             .post(`${process.env.REACT_APP_API_BASE_URL}/dine/save_dine`, data)
             .then((response) => {
-              //console.log("Data saved successfully...");
               setGiftDelivered(true);
-              // Perform any necessary actions after saving the data
             })
             .catch((error) => {
               console.error("Error saving data:", error);
-              // Handle error
             });
         }
       })
       .catch((error) => {
         console.error("Error fetching ref_codes:", error);
-        // Handle error
       });
   };
 

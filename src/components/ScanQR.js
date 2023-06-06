@@ -161,7 +161,7 @@ const ScanQR = () => {
   };
 
   const videoConstraints = {
-    facingMode: { exact: "environment" }, // Use the rear camera
+    facingMode: "user",
   };
 
   const url = result && result.text;
@@ -182,7 +182,10 @@ const ScanQR = () => {
               style={previewStyle}
               onError={handleError}
               onScan={handleScan}
-              videoConstraints={videoConstraints} // Pass the videoConstraints option
+              //videoConstraints={videoConstraints} // Pass the videoConstraints option
+              constraints={{
+                video: { facingMode: "environment" },
+              }}
             />
           </div>
           <br />
@@ -208,4 +211,3 @@ const ScanQR = () => {
 };
 
 export default ScanQR;
-
