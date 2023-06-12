@@ -8,6 +8,7 @@ import GiftDetails from "./components/GiftDetails"
 import ScanSuccess from "./components/QrSuccess"
 import ScanError from "./components/QrError"
 import DiningProfile from './components/DiningProfile'
+import Admin from './components/Admin'
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route exact path="/profile/:shortenedUrl/:roleName/:roleType" element={<Profile/>}/>
         <Route exact path="/gift/:shortenedUrl/:roleName/:roleType" element={<GiftDetails/>}/>
         <Route exact path="/dine/:shortenedUrl/:roleName/:roleType" element={<DiningProfile/>}/>
+        <Route exact path="/admin/:roleName/:roleType" element={<Admin/>}/>
         <Route exact path="/scan-success/:shortenedUrl/:roleName/:roleType" element={<ScanSuccess/>}/>
         <Route exact path="/scan-error/:roleName/:roleType" element={<ScanError/>}/>
       </Routes>

@@ -60,38 +60,47 @@ const GiftDetails = () => {
   }, [shortenedUrl]);
 
   const handleGift = () => {
-    // Prepare the data to be sent to the server
     const dateTime = moment().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
     const data = {
       date_time: dateTime,
       gift_issue: "1",
       gift_issue_person_name: roleName,
-      gift_owner_name: doctorName, // Replace with the actual gift owner's name
-      ref_code: shortenedUrl, // Replace with the actual reference code
+      gift_owner_name: doctorName,
+      ref_code: shortenedUrl,
     };
 
-    // Fetch the ref_codes from the API endpoint
     axios
       .get(`${process.env.REACT_APP_API_BASE_URL}/gift/getRefCode`)
       .then((response) => {
         const columnData = response.data.map((item) => item.ref_code);
-        //console.log("Column Data:", columnData);
 
-        // Check if ref_code already exists in the columnData
         if (columnData.includes(shortenedUrl)) {
           console.log("ref_code already exists in the database");
           setError("Gift Already Issued!");
-          // Disable "Gift Collect" button and show error message
           setGiftDelivered(true);
-          // Perform any additional error handling or display logic
+          // Save the entrance data
+          const entranceData = {
+            ref_code: shortenedUrl,
+            gift_date_time: dateTime,
+          };
+
+          axios
+            .post(
+              `${process.env.REACT_APP_API_BASE_URL}/entrance/save_entrance`,
+              entranceData
+            )
+            .then((response) => {
+              // Perform any necessary actions after saving the entrance data
+            })
+            .catch((error) => {
+              console.error("Error saving entrance data:", error);
+              // Handle error
+            });
         } else {
-          // Example API request to save data in the datatable
           axios
             .post(`${process.env.REACT_APP_API_BASE_URL}/gift/save_gift`, data)
             .then((response) => {
-              //console.log("Data saved successfully...");
               setGiftDelivered(true);
-              // Perform any necessary actions after saving the data
             })
             .catch((error) => {
               console.error("Error saving data:", error);

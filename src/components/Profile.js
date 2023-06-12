@@ -10,8 +10,11 @@ const Profile = () => {
   const [, setValidationResult] = useState(null);
   const [certificateData, setCertificateData] = useState(null);
   const [doctorName, setDoctorName] = useState("");
+  //const [mobile, setMobile] = useState("");
   const [category, setCategory] = useState("");
   const [error, setError] = useState("");
+  const [isAdded, setIsAdded] = useState(false);
+
 
   useEffect(() => {
     // Check if data already exists in the database
@@ -55,53 +58,55 @@ const Profile = () => {
   }, [shortenedUrl]);
 
   const handleSaveData = () => {
-    // Check if data already exists in the database
-    const dateTime = moment().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
-    const data = {
-      ref_code: shortenedUrl,
-      date_time: dateTime,
-      roleName: roleName,
-      scan_person_name: roleName,
-    };
-  
-    axios
-      .get(`${process.env.REACT_APP_API_BASE_URL}/entrance/getRefCode`)
-      .then((response) => {
-        const columnData = response.data.map((item) => item.ref_code);
-        if (columnData.includes(shortenedUrl)) {
-          const existingUser = response.data.find(
-            (item) => item.ref_code === shortenedUrl
-          );
-          const existingDateTime = existingUser.date_time;
-          setError(`User already exists! Entered on: ${existingDateTime}`);
-          console.log(existingDateTime);
-        } else {
-          axios
-            .post(
-              `${process.env.REACT_APP_API_BASE_URL}/entrance/save_entrance`,
-              data
-            )
-            .then((response) => {
-              //console.log("Data added successfully to the database");
-            })
-            .catch((error) => {
-              console.error("Error adding data to the database:", error);
-              // Handle error
-              //setError("User already Exists!");
-            });
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching data from the database:", error);
-        // Handle error
-      });
+    if (!isAdded) {
+      setIsAdded(true);
+      const dateTime = moment()
+        .tz("Asia/Kolkata")
+        .format("YYYY-MM-DD HH:mm:ss");
+      const data = {
+        ref_code: shortenedUrl,
+        entrance_date_time: dateTime,
+        doctor_name: doctorName,
+        scan_person_name: roleName,
+        mobile_number:certificateData.msisdn,
+        register_date_time:certificateData.createdDatetime,
+        invitation_id:certificateData.digitalCertificateId,
+      };
+
+      axios
+        .get(`${process.env.REACT_APP_API_BASE_URL}/entrance/getRefCode`)
+        .then((response) => {
+          const columnData = response.data.map((item) => item.ref_code);
+          if (columnData.includes(shortenedUrl)) {
+            const existingUser = response.data.find(
+              (item) => item.ref_code === shortenedUrl
+            );
+            const existingDateTime = existingUser.entrance_date_time;
+            setError(`User already exists! Entered on: ${existingDateTime}`);
+            console.log(existingDateTime);
+          } else {
+            axios
+              .post(
+                `${process.env.REACT_APP_API_BASE_URL}/entrance/save_entrance`,
+                data
+              )
+              .then((response) => {})
+              .catch((error) => {
+                console.error("Error adding data to the database:", error);
+              });
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching data from the database:", error);
+        });
+    }
   };
-  
-  
 
   useEffect(() => {
-    handleSaveData();
-  }, []); // Call it only once when the component mounts
+    if (doctorName) {
+      handleSaveData();
+    }
+  }, [doctorName]);
 
   return (
     <div className="container d-flex align-items-center justify-content-center vh-100">

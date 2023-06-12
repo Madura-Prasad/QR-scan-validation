@@ -27,11 +27,19 @@ const Login = () => {
     e.preventDefault();
     if (validateFields()) {
       try {
-        const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/login`, user);
+        const response = await axios.post(
+          `${process.env.REACT_APP_API_BASE_URL}/login`,
+          user
+        );
         const responseData = response.data.data;
         const roleType = responseData.role_type;
         const roleName = responseData.email;
-        navigate(`/welcome/${roleType}/${roleName}`);
+        //navigate(`/welcome/${roleType}/${roleName}`);
+        if (roleType === "Admin") {
+          navigate(`/admin/${roleType }/${roleName}`);
+        } else {
+          navigate(`/welcome/${roleType}/${roleName}`);
+        }
       } catch (error) {
         console.log(error.response.data);
         setError({
@@ -90,8 +98,10 @@ const Login = () => {
           <h5 className=" text-center m-4 fw-bold">Sign In</h5>
 
           {error.errorLogging && (
-  <p className="bg-danger text-light text-center fw-semibold rounded p-1">{error.errorLogging}</p>
-)}
+            <p className="bg-danger text-light text-center fw-semibold rounded p-1">
+              {error.errorLogging}
+            </p>
+          )}
 
           <form onSubmit={(e) => onSubmit(e)} method="post">
             <div className="mb-4 mt-5 text-start">
