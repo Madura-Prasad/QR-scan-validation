@@ -71,6 +71,8 @@ const Profile = () => {
         mobile_number:certificateData.msisdn,
         register_date_time:certificateData.createdDatetime,
         invitation_id:certificateData.digitalCertificateId,
+        dine_date_time: "",
+        gift_date_time: "",
       };
 
       axios
@@ -124,9 +126,9 @@ const Profile = () => {
           </div>
 
           {certificateData && (
-            <div class="row justify-content-center ">
-              <div class="col-auto">
-                <table class="table table-borderless">
+            <div className="row justify-content-center ">
+              <div className="col-auto">
+                <table className="table table-borderless">
                   <tbody>
                     <tr>
                       <th scope="row" className="fw-bold">
