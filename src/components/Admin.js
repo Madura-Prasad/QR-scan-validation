@@ -1,115 +1,144 @@
-// import * as React from "react";
-// import { useEffect, useState } from "react";
+// import React, { useEffect, useState } from "react";
 // import { DataGrid } from "@mui/x-data-grid";
 // import { Link } from "react-router-dom";
 
-// const columns = [
-//   { field: "invitation_id", headerName: "Invitation ID", width: 150 },
-//   { field: "doctor_name", headerName: "Doctor's Name", width: 200 },
-//   {
-//     field: "register_date_time",
-//     headerName: "Registered Date & Time",
-//     width: 170,
-//   },
-//   {
-//     field: "mobile_number",
-//     headerName: "Mobile Number",
-//     width: 130,
-//   },
-//   {
-//     field: "entrance_date_time",
-//     headerName: "Entrance Date & Time",
-//     width: 150,
-//   },
-//   {
-//     field: "dine_date_time",
-//     headerName: "Dinner Date & Time",
-//     width: 150,
-//   },
-//   {
-//     field: "gift_date_time",
-//     headerName: "Gift Date & Time",
-//     width: 150,
-//   },
-//   {
-//     field: "ref_code",
-//     headerName: "Invitation Link",
-//     sortable: false,
-//     width: 600,
-//     valueGetter: (params) =>
-//       `https://verify.certificate.lk/view?ref=${params.row.ref_code || ""}`,
-//     renderCell: (params) => (
-//       <a href={params.value} target="_blank" rel="noopener noreferrer">
-//         {params.value}
-//       </a>
-//     ),
-//   },
-// ];
-
-// export default function DataTable() {
-//   const [rows, setRows] = useState([]);
-//   const [search, setSearch] = useState("");
-//   const [startDate, setStartDate] = useState(null);
-//   const [endDate, setEndDate] = useState(null);
+// const YourComponent = () => {
+//   const [certificateList, setCertificateList] = useState([]);
+//   const [existingCertificates, setExistingCertificates] = useState([]);
+//   const [dataFetched, setDataFetched] = useState(false); // Flag variable
+//   const [searchQuery, setSearchQuery] = useState("");
 
 //   useEffect(() => {
-//     fetchData();
+//     const fetchData = async () => {
+//       try {
+//         const data = {
+//           userId: 239,
+//           digitalContentId: 89,
+//           page: 0,
+//           pageCount: 1,
+//         };
 
-//     // Fetch data every 10 seconds (adjust the interval as needed)
-//     const interval = setInterval(fetchData, 300000);
+//         const allCertificates = [];
 
-//     return () => {
-//       clearInterval(interval);
+//         let currentPage = 1;
+//         let totalPage = 1;
+
+//         while (currentPage <= totalPage) {
+//           const pageData = { ...data, page: currentPage };
+
+//           const response = await fetch(
+//             "https://emg.textware.lk/emgapi/v1/digital/ext/certificate",
+//             {
+//               method: "POST",
+//               headers: {
+//                 "Content-Type": "application/json",
+//               },
+//               body: JSON.stringify(pageData),
+//             }
+//           );
+
+//           const responseData = await response.json();
+
+//           if (currentPage === 1) {
+//             totalPage = responseData.totalPage;
+//           }
+
+//           const certificates = responseData.digitalCertificateList;
+//           allCertificates.push(...certificates);
+
+//           currentPage++;
+//         }
+
+//         setCertificateList(allCertificates);
+//         setDataFetched(true); // Update the flag variable after fetching data
+//       } catch (error) {
+//         console.error("Error:", error);
+//       }
 //     };
-//   }, []);
 
-//   const fetchData = () => {
-//     const startDateParam = startDate
-//       ? `startDate=${startDate.toISOString()}`
-//       : "";
-//     const endDateParam = endDate ? `endDate=${endDate.toISOString()}` : "";
-//     const queryParams = [startDateParam, endDateParam]
-//       .filter(Boolean)
-//       .join("&");
+//     // Fetch data initially if not fetched already
+//     if (!dataFetched) {
+//       fetchData();
+//     }
+//   }, [dataFetched]);
 
-//     fetch(`${process.env.REACT_APP_API_BASE_URL}/all/data?${queryParams}`)
-//       .then((response) => response.json())
-//       .then((data) => {
-//         // Remove duplicate rows based on invitation_id
-//         const uniqueRows = Array.from(
-//           new Set(data.map((row) => row.ref_code))
-//         ).map((refCode) => {
-//           return data.find((row) => row.ref_code === refCode);
-//         });
-//         setRows(uniqueRows);
-//       })
-//       .catch((error) => console.error("Error fetching data:", error));
-//   };
+//   useEffect(() => {
+//     const checkDataExistence = async () => {
+//       for (const certificate of certificateList) {
+//         const uniqueId = certificate.uniqueId;
+//         try {
+//           const response = await fetch(
+//             `${process.env.REACT_APP_API_BASE_URL}/all/data`
+//           );
+//           const rowData = await response.json();
+//           const matchingRow = rowData.find((row) => row.ref_code === uniqueId);
+//           if (matchingRow) {
+//             setExistingCertificates((prevCertificates) => [
+//               ...prevCertificates,
+//               matchingRow,
+//             ]);
+//           }
+//         } catch (error) {
+//           console.error("Error:", error);
+//         }
+//       }
+//     };
 
-//   const handleSearchChange = (event) => {
-//     setSearch(event.target.value);
-//   };
+//     if (certificateList.length > 0) {
+//       checkDataExistence();
+//     }
+//   }, [certificateList]);
 
-//   const handleStartDateChange = (event) => {
-//     setStartDate(new Date(event.target.value));
-//   };
+//   const columns = [
+//     { field: "id", headerName: "Invitation ID", width: 100 },
+//     { field: "doctorname", headerName: "Doctor Name", width: 200 },
+//     {
+//       field: "createdDatetime",
+//       headerName: "Registered Date & Time",
+//       width: 170,
+//     },
+//     { field: "mobile", headerName: "Mobile Number", width: 120 },
+//     { field: "entrance", headerName: "Entrance Date & Time", width: 170 },
+//     { field: "gift", headerName: "Gift Date & Time", width: 170 },
+//     { field: "dine", headerName: "Dine Date & Time", width: 170 },
+//     {
+//       field: "link",
+//       headerName: "Invitation Link",
+//       sortable: false,
+//       width: 100,
+//       valueGetter: (params) =>
+//         `https://verify.certificate.lk/view?ref=${params.row.uniqueId || ""}`,
+//       renderCell: (params) => (
+//         <a href={params.value} target="_blank" rel="noopener noreferrer">
+//           Click Here
+//         </a>
+//       ),
+//     },
+//   ];
 
-//   const handleEndDateChange = (event) => {
-//     setEndDate(new Date(event.target.value));
-//   };
+//   const rows = certificateList.map((certificate) => {
+//     const certificateData = JSON.parse(certificate.certificateDataJson);
+//     const matchingCertificate = existingCertificates.find(
+//       (cert) => cert.ref_code === certificate.uniqueId
+//     );
 
-//   const filteredRows = rows.filter((row) => {
-//     const searchFields = Object.values(row).join(" ").toLowerCase();
-//     const registerDateTime = new Date(row.register_date_time)
-//       .toISOString()
-//       .split("T")[0];
-//     const isMatch = searchFields.includes(search.toLowerCase());
-//     const isDateInRange =
-//       (!startDate ||
-//         registerDateTime >= startDate.toISOString().split("T")[0]) &&
-//       (!endDate || registerDateTime <= endDate.toISOString().split("T")[0]);
-//     return isMatch && isDateInRange;
+//     return {
+//       id: certificate.digitalCertificateId,
+//       doctorname: certificateData.doctorname,
+//       createdDatetime: certificate.createdDatetime,
+//       mobile: certificate.msisdn,
+//       entrance: matchingCertificate?.entrance_date_time || "No data available",
+//       gift: matchingCertificate?.gift_date_time || "No data available",
+//       dine: matchingCertificate?.dine_date_time || "No data available",
+//       uniqueId: certificate.uniqueId,
+//     };
 //   });
+
+//   const filteredRows = rows.filter((row) =>
+//     Object.values(row).some((value) =>
+//       value.toString().toLowerCase().includes(searchQuery.toLowerCase())
+//     )
+//   );
 
 //   return (
 //     <div className="container align-items-center justify-content-center vh-100">
@@ -118,58 +147,39 @@
 //           <h4 className="text-center mt-4 fw-bold text-secondary text-decoration-underline mb-5">
 //             Entrance Details
 //           </h4>
-
 //           <div className="row mb-3">
-//             <div className="col-md-6">
+//             <div className="col-md-12">
 //               <input
 //                 type="text"
+//                 value={searchQuery}
+//                 onChange={(e) => setSearchQuery(e.target.value)}
+//                 placeholder="Search Here ..."
 //                 className="form-control"
-//                 placeholder="Search..."
-//                 value={search}
-//                 onChange={handleSearchChange}
 //               />
-//             </div>
-//             <div className="col-md-3">
-//               <input
-//                 type="date"
-//                 id="start-date"
-//                 className="form-control"
-//                 value={startDate ? startDate.toISOString().split("T")[0] : ""}
-//                 onChange={handleStartDateChange}
-//               />
-//               <label htmlFor="start-date" className="form-label">
-//                 Start Date (Register Date)
-//               </label>
-//             </div>
-//             <div className="col-md-3">
-//               <input
-//                 type="date"
-//                 id="end-date"
-//                 className="form-control"
-//                 value={endDate ? endDate.toISOString().split("T")[0] : ""}
-//                 onChange={handleEndDateChange}
-//               />
-//               <label htmlFor="end-date" className="form-label ">
-//                 End Date (Register Date)
-//               </label>
 //             </div>
 //           </div>
-//           <DataGrid
-//             rows={filteredRows}
-//             columns={columns}
-//             autoHeight
-//             pageSize={5}
-//             disableSelectionOnClick
-//             className="p-4"
-//           />
-//           <Link to={"/"} className="float-end text-secondary fw-bold mb-3 mt-4">
-//             Log Out
-//           </Link>
+//           <div style={{ height: 400, width: "100%" }}>
+//             <DataGrid
+//               columns={columns}
+//               rows={filteredRows}
+//               autoHeight
+//               pagination
+//               pageSize={10}
+//             />
+//             <Link
+//               to={"/"}
+//               className="float-end text-secondary fw-bold mb-3 mt-4"
+//             >
+//               Log Out
+//             </Link>
+//           </div>
 //         </div>
 //       </div>
 //     </div>
 //   );
-// }
+// };
+
+// export default YourComponent;
 import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
@@ -177,117 +187,97 @@ import { Link } from "react-router-dom";
 const YourComponent = () => {
   const [certificateList, setCertificateList] = useState([]);
   const [existingCertificates, setExistingCertificates] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [allData, setAllData] = useState([]);
+
+  const fetchCertificateData = async () => {
+    try {
+      const data = {
+        userId: 239,
+        digitalContentId: 89,
+        page: 0,
+        pageCount: 1000,
+      };
+
+      const response = await fetch(
+        "https://emg.textware.lk/emgapi/v1/digital/ext/certificate",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      const responseData = await response.json();
+      const certificates = responseData.digitalCertificateList;
+
+      setCertificateList(certificates);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const fetchAllData = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_BASE_URL}/all/data`
+      );
+      const data = await response.json();
+      setAllData(data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = {
-          userId: 239,
-          digitalContentId: 89,
-          page: 1,
-          pageCount: 10,
-        };
+    fetchCertificateData();
+    fetchAllData();
 
-        const allCertificates = [];
+    const intervalId = setInterval(() => {
+      fetchCertificateData();
+      fetchAllData();
+    }, 300000);
 
-        let currentPage = 1;
-        let totalPage = 1;
-
-        while (currentPage <= totalPage) {
-          const pageData = { ...data, page: currentPage };
-
-          const response = await fetch(
-            "https://emg.textware.lk/emgapi/v1/digital/ext/certificate",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(pageData),
-            }
-          );
-
-          const responseData = await response.json();
-
-          if (currentPage === 1) {
-            totalPage = responseData.totalPage;
-          }
-
-          const certificates = responseData.digitalCertificateList;
-          allCertificates.push(...certificates);
-
-          currentPage++;
-        }
-
-        setCertificateList(allCertificates);
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    };
-
-    // Fetch data initially
-    fetchData();
-
-    // Fetch data every 1 minute
-    const interval = setInterval(fetchData, 60000);
-
-    // Clean up the interval when the component unmounts
-    return () => clearInterval(interval);
+    return () => clearInterval(intervalId);
   }, []);
 
   useEffect(() => {
     const checkDataExistence = async () => {
-      const promises = certificateList.map(async (certificate) => {
+      for (const certificate of certificateList) {
         const uniqueId = certificate.uniqueId;
-        try {
-          const response = await fetch(
-            `${process.env.REACT_APP_API_BASE_URL}/all/data`
-          );
-          const rowData = await response.json();
-          const matchingRow = rowData.find((row) => row.ref_code === uniqueId);
-          if (matchingRow) {
-            // console.log("Data exists for uniqueId:", uniqueId);
-            // console.log("Row data:", matchingRow.entrance_date_time);
-            setExistingCertificates((prevCertificates) => [
-              ...prevCertificates,
-              matchingRow,
-            ]);
-          } else {
-            // console.log("Data does not exist for uniqueId:", uniqueId);
-          }
-        } catch (error) {
-          console.error("Error:", error);
+        const matchingRow = allData.find((row) => row.ref_code === uniqueId);
+        if (matchingRow) {
+          setExistingCertificates((prevCertificates) => [
+            ...prevCertificates,
+            matchingRow,
+          ]);
         }
-      });
-
-      await Promise.all(promises);
+      }
     };
 
     checkDataExistence();
-  }, [certificateList]);
+  }, [certificateList, allData]);
 
   const columns = [
-    { field: "id", headerName: "Invitation ID", width: 150 },
+    { field: "id", headerName: "Invitation ID", width: 100 },
     { field: "doctorname", headerName: "Doctor Name", width: 200 },
-    {
-      field: "createdDatetime",
-      headerName: "Registered Date & Time",
-      width: 200,
-    },
-    { field: "mobile", headerName: "Mobile Number", width: 170 },
-    { field: "entrance", headerName: "Entrance Date & Time", width: 200 },
-    { field: "gift", headerName: "Gift Date & Time", width: 200 },
-    { field: "dine", headerName: "Dine Date & Time", width: 200 },
+    { field: "createdDatetime", headerName: "Registered Date & Time", width: 170 },
+    { field: "mobile", headerName: "Mobile Number", width: 120 },
+    { field: "entrance", headerName: "Entrance Date & Time", width: 170 },
+    { field: "gift", headerName: "Gift Date & Time", width: 170 },
+    { field: "dine", headerName: "Dine Date & Time", width: 170 },
     {
       field: "link",
       headerName: "Invitation Link",
       sortable: false,
-      width: 600,
+      width: 100,
       valueGetter: (params) =>
         `https://verify.certificate.lk/view?ref=${params.row.uniqueId || ""}`,
       renderCell: (params) => (
         <a href={params.value} target="_blank" rel="noopener noreferrer">
-          {params.value}
+          Click Here
         </a>
       ),
     },
@@ -311,6 +301,12 @@ const YourComponent = () => {
     };
   });
 
+  const filteredRows = rows.filter((row) =>
+    Object.values(row).some((value) =>
+      value.toString().toLowerCase().includes(searchQuery.toLowerCase())
+    )
+  );
+
   return (
     <div className="container align-items-center justify-content-center vh-100">
       <div className="row">
@@ -318,18 +314,26 @@ const YourComponent = () => {
           <h4 className="text-center mt-4 fw-bold text-secondary text-decoration-underline mb-5">
             Entrance Details
           </h4>
+          <div className="row mb-3">
+            <div className="col-md-12">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search Here ..."
+                className="form-control"
+              />
+            </div>
+          </div>
           <div style={{ height: 400, width: "100%" }}>
             <DataGrid
               columns={columns}
-              rows={rows}
+              rows={filteredRows}
               autoHeight
               pagination
               pageSize={10}
             />
-            <Link
-              to={"/"}
-              className="float-end text-secondary fw-bold mb-3 mt-4"
-            >
+            <Link to={"/"} className="float-end text-secondary fw-bold mb-3 mt-4">
               Log Out
             </Link>
           </div>

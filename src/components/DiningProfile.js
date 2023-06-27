@@ -67,6 +67,8 @@ const Profile = () => {
       date_time: dateTime,
       dine_issue: "1",
       ref_code: shortenedUrl, // Replace with the actual reference code
+      dine_issue_person_name: roleName,
+      owner_name: doctorName,
     };
 
     axios
